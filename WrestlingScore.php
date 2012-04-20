@@ -247,8 +247,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 			  <td><?php echo $row['w1_score25']; ?></td>
 			  <td><?php echo $row['w1_score26']; ?></td>
 			  <td><?php echo $row['w1_score27']; ?></td>
-			  <td class="tableHighlight">&nbsp;</td>
-			  <td class="tableHighlight">&nbsp;</td>
+			  <td class="tableHighlight"><?php echo $row['w1_score']; ?></td>
+			  <td class="tableHighlight"><?php echo $row['w1_team']; ?></td>
 			</tr>
 			<tr>
 			  <td><?php echo $row['w2']; ?></td>
@@ -282,8 +282,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 			  <td><?php echo $row['w2_score25']; ?></td>
 			  <td><?php echo $row['w2_score26']; ?></td>
 			  <td><?php echo $row['w2_score27']; ?></td>
-			  <td class="tableHighlight">&nbsp;</td>
-			  <td class="tableHighlight">&nbsp;</td>
+			  <td class="tableHighlight"><?php echo $row['w2_score']; ?></td>
+			  <td class="tableHighlight"><?php echo $row['w2_team']; ?></td>
 			</tr>
        <tr class="rowSpacer">
           <td>&nbsp;</td>

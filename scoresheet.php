@@ -77,7 +77,7 @@ function myEscape($s) {
 }
 
 function saveMatch() {
-	global $db, $scores;
+	global $db, $points;
 	
 	$query = "INSERT INTO matches (w1, w2, w1_weight, w2_weight, choice1, choice2, choice3";
 	for ($i = 1; $i <= 29; $i++) $query .= ", w1_score" . $i . "";
@@ -96,23 +96,27 @@ function saveMatch() {
 	$db->query($query);
 	$row = $db->query("SELECT * FROM matches WHERE id=" . $db->lastInsertRowid())->fetch();
 
+	$pin_winner = -1;
 	$team_scores = array(0, 0);
 	$w_scores = array(0, 0);
-	for ($j = 0; $j < 2; $j++) {
+	for ($j = 1; $j <= 2; $j++) {
 		for ($i = 1; $i <= 29; $i++) {
-			$w_scores[$j] += $scores[$row['w' . $j . '_score' . $i]];
+			$w_scores[$j-1] += $points[$row['w' . ($j) . '_score' . $i]];
 			if ($row['w' . $j . '_score' . $i] == 'ff' || $row['w' . $j . '_score' . $i] == 'fl' && $team_score[$j] == 0) $team_score[$j] = 6;
 		}
 	}
-	if ($team_scores[0] == 0 && $team_scores[1] == 0) {
+	if ($pin_winner != -1) {
+		$team_scores[$pin_winner] = 6;
+		$team_scores[$pin_winner ^ 1] = 0;
+	} elseif ($team_scores[0] == 0 && $team_scores[1] == 0) {
 		if ($team_scores[0] > $team_scores[1]) $winningTeam = 0;
 		else $winningTeam = 1;
-		if (0 < abs($team_scores[0] - $team_scores[1]) < 8) $team_winnings = 3;
-		else if (7 < abs($team_scores[0] - $team_scores[1]) < 15) $team_winnings = 4;
+		if ((0 < abs($team_scores[0] - $team_scores[1])) < 8) $team_winnings = 3;
+		else if ((7 < abs($team_scores[0] - $team_scores[1])) < 15) $team_winnings = 4;
 		else $team_winnings = 5;
 		$team_scores[$winningTeam] = $team_winnings;
 	}
-	$db->query("UPDATE matches (w1_score, w1_team, w2_score, w2_team) VALUES (" . $w_scores[0] . ", " . $team_scores[0] . ", " . $w_scores[1] . ", " . $team_scores[1] . ") WHERE id=" . $row['id']);
+	$db->query("UPDATE matches SET w1_score=" . $w_scores[0] . ", w1_team=" . $team_scores[0] . ", w2_score=" . $w_scores[1] . ", w2_team=" . $team_scores[1] . " WHERE id=" . $row['id']);
 }
 
 //initializeDatabase();
