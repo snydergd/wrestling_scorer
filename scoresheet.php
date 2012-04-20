@@ -1,4 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <?php 
 //________________________________Match Scores_____
 $t = 2; //Take Down
@@ -16,14 +15,6 @@ $c1 = 1;
 $w = 0; // warning
 $fs = 0; //false start 
 
-// _________________________________Notes__________
-//
-//
-//
-//
-//
-//
-//
 //__________________________________Team Scores_____
 $dc = 3; //Decision                      If match score is 1-7
 $mdc = 4; // Major Decision              If match score is 8-14
@@ -33,5 +24,79 @@ $forfeit = 6; //Forfeit (no-show)        This is just if the team didn't have a 
 //
 //
 //
+
+$points = array(
+	"t" => 2,
+	"r" => 2,
+	"e" => 1,
+	"n2" => 2,
+	"n3" => 3,
+	"n4" => 4,
+	"sw" => 0,
+	"s" => 1,
+	"tv" => 1,
+	"p" => 1,
+	"c" => 0,
+	"c1" => 1,
+	"w" => 0,
+	"fs" => 0,
+	
+	"dc" => 3,
+	"mdc" => 3,
+	"tf" => 3,
+	"fall" => 3,
+	"forfeit" => 3
+);
+
+
+$db = new SQLiteDatabase('hidden-database');
+function initializeDatabase() {
+	global $db;
+	$query = "CREATE TABLE matches (
+		id int PRIMARY KEY,
+		event_date date,
+		w1 varchar(64),
+		w2 varchar(64),
+		w1_weight int,
+		choice1 varchar(2),
+		choice2 varchar(2),
+		choice3 varchar(2),
+		w2_weight int";
+	for ($i = 1; $i <= 29; $i++) {
+		$query .= ", w1_score" . $i . " varchar(2), w2_score" . $i . " varchar(2)";
+	}
+	$query .= ")";
+	echo $query;
+	$db->query($query);
+}
+
+function myEscape($s) {
+	if ($s == "N/A") $s = "null";
+	else $s = "'" . sqlite_escape_string($s) . "'";
+	return $s;
+}
+
+function saveMatch() {
+	global $db;
+	
+	$query = "INSERT INTO matches (w1, w2, w1_weight, w2_weight, choice1, choice2, choice3";
+	for ($i = 1; $i <= 29; $i++) $query .= ", w1_score" . $i . "";
+	for ($i = 1; $i <= 29; $i++) $query .= ", w2_score" . $i . "";
+	$query .= ") VALUES ('" . sqlite_escape_string($_POST['W1Name'])
+		. "','" . sqlite_escape_string($_POST['W2Name'])
+		. "','" . sqlite_escape_string($_POST['W1Weight'])
+		. "','" . sqlite_escape_string($_POST['W2Weight'])
+		. "'," . myEscape($_POST['p1choice'])
+		. "," . myEscape($_POST['p2choice'])
+		. "," . myEscape($_POST['p3choice']);
+	
+	for ($i = 1; $i <= 29; $i++) $query .= "," . myEscape($_REQUEST['W1Score' . $i]);
+	for ($i = 1; $i <= 29; $i++) $query .= "," . myEscape($_REQUEST['W2Score' . $i]);
+	$query .= ")";
+	$db->query($query);
+}
+
+//initializeDatabase();
+if (isset($_POST['W1Name'])) saveMatch();
 
 ?>
