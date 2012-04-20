@@ -146,6 +146,8 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 						  <option value="c1">C1</option>
 						  <option value="w">W</option>
 						  <option value="fs">FS</option>
+						  <option value="fl">Fall</option>
+						  <option value="ff">Forfeit</option>
 						  <option selected="selected">N/A</option>
 						</select>
 					<?php }
