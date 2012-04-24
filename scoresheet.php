@@ -79,10 +79,11 @@ function myEscape($s) {
 function saveMatch() {
 	global $db, $points;
 	
-	$query = "INSERT INTO matches (w1, w2, w1_weight, w2_weight, choice1, choice2, choice3";
+	$query = "INSERT INTO matches (event_date, w1, w2, w1_weight, w2_weight, choice1, choice2, choice3";
 	for ($i = 1; $i <= 29; $i++) $query .= ", w1_score" . $i . "";
 	for ($i = 1; $i <= 29; $i++) $query .= ", w2_score" . $i . "";
-	$query .= ") VALUES ('" . sqlite_escape_string($_POST['W1Name'])
+	$query .= ") VALUES ('" . date('Y-m-d H:i:s')
+		. "','" . sqlite_escape_string($_POST['W1Name'])
 		. "','" . sqlite_escape_string($_POST['W2Name'])
 		. "','" . sqlite_escape_string($_POST['W1Weight'])
 		. "','" . sqlite_escape_string($_POST['W2Weight'])

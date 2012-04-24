@@ -97,6 +97,12 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
     <h1>Wrestling Score Chart</h1>
     <hr />
     <form id="form1" name="form1" method="post" action="">
+	  <input type="hidden" name="event_date" value="<?php
+			// the event date is what keeps all the matches on one page
+			// this input ensures that that this form adds to the data  on this table
+			if (isset($_POST['event_date'])) echo $_POST['event_date'];
+			else echo date('Y-m-d H:i:s');
+	  ?>" />
       <p>
 		<?php
 			function displayPlayer($n) {
